@@ -1,32 +1,28 @@
 package br.com.ionxp.suporte.api.controller;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ionxp.suporte.domain.model.Produto;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 
 @RestController
 public class ProdutoController {
 	
+	@PersistenceContext
+	private EntityManager manager;
+	
 	@GetMapping("/produtos")
 	public List<Produto> listar(){
-		Produto produto = new Produto();
-		produto.setId(1L);
-		produto.setDescricao("Monitor");
-		produto.setCodigoBarras("12345678910");
-		produto.setPreco(10.20);
 		
-		Produto produto2 = new Produto();
-		produto2.setId(2L);
-		produto2.setDescricao("Teclado");
-		produto2.setCodigoBarras("12345678910");
-		produto2.setPreco(10.20);
-		produto2.setQtdEstoque(10.0);
+		TypedQuery<Produto> query = manager.createQuery("from Produto", Produto.class);
+		return query.getResultList();
 		
-		return Arrays.asList(produto, produto2);
+		
 	}
 
 }
