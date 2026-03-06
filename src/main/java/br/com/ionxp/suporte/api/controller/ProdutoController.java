@@ -2,25 +2,23 @@ package br.com.ionxp.suporte.api.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ionxp.suporte.domain.model.Produto;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
+import br.com.ionxp.suporte.domain.repository.ProdutoRepository;
 
 @RestController
 public class ProdutoController {
 	
-	@PersistenceContext
-	private EntityManager manager;
+	@Autowired
+	private ProdutoRepository produtoRepository;
 	
 	@GetMapping("/produtos")
 	public List<Produto> listar(){
 		
-		TypedQuery<Produto> query = manager.createQuery("from Produto", Produto.class);
-		return query.getResultList();
+		return produtoRepository.findAll();
 		
 		
 	}
