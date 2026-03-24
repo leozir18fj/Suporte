@@ -2,6 +2,7 @@ package br.com.ionxp.suporte.api.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ionxp.suporte.domain.model.Produto;
 import br.com.ionxp.suporte.domain.repository.ProdutoRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -41,7 +44,8 @@ public class ProdutoController {
 	}
 	
 	@PostMapping
-	public Produto adicionar(@RequestBody Produto produto) {
+	@ResponseStatus(HttpStatus.CREATED)
+	public Produto adicionar(@Valid @RequestBody Produto produto) {
 		return produtoRepository.save(produto);
 	}
 	
