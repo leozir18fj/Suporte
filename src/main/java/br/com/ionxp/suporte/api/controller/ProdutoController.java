@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.ionxp.suporte.domain.exception.NegocioException;
 import br.com.ionxp.suporte.domain.model.Produto;
 import br.com.ionxp.suporte.domain.repository.ProdutoRepository;
+import br.com.ionxp.suporte.domain.service.CadastroProdutoService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -25,6 +27,7 @@ import lombok.AllArgsConstructor;
 public class ProdutoController {
 	
 	private final ProdutoRepository produtoRepository;
+	private final CadastroProdutoService cadastroProdutoService;
 	
 	@GetMapping
 	public List<Produto> listar(){
@@ -45,19 +48,19 @@ public class ProdutoController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Produto adicionar(@Valid @RequestBody Produto produto) {
-		return produtoRepository.save(produto);
+	public Produto adicionar(@Valid @RequestBody Produto produto) throws NegocioException {
+		return cadastroProdutoService.adicionar(produto);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Produto> atualizar(@PathVariable Long id, @RequestBody Produto produto) {
+	public ResponseEntity<Produto> atualizar(@Valid @PathVariable Long id, @RequestBody Produto produto) throws NegocioException {
 		
 		if (!produtoRepository.existsById(id)) {
 			return ResponseEntity.notFound().build();
 		}
 		
 		produto.setId(id);
-		Produto produtoAtualizado = produtoRepository.save(produto);
+		Produto produtoAtualizado = cadastroProdutoService.adicionar(produto);
 		return ResponseEntity.ok(produtoAtualizado);
 		
 	}
@@ -68,7 +71,7 @@ public class ProdutoController {
 			return ResponseEntity.notFound().build();
 		}
 		
-		produtoRepository.deleteById(id);
+		cadastroProdutoService.excluir(id);
 		return ResponseEntity.noContent().build();
 	}
 }
