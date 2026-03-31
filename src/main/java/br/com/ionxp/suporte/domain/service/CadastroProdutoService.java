@@ -18,6 +18,7 @@ public class CadastroProdutoService {
 	public Produto adicionar(Produto produto) throws NegocioException {
 		boolean codigoBarrasEmUso = produtoRepository.
 				findByCodigoBarras(produto.getCodigoBarras())
+				.filter(p -> !p.equals(produto))
 				.isPresent();
 		if (codigoBarrasEmUso) {
 			throw new NegocioException("Código de barras já utilizado em outro produto");
