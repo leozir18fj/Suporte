@@ -2,13 +2,14 @@ package br.com.ionxp.suporte.domain.model;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
+import br.com.ionxp.suporte.domain.model.enums.TipoCliente;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +18,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Produto {
+public class Cliente {
 	
 	@EqualsAndHashCode.Include
 	@Id
@@ -25,13 +26,12 @@ public class Produto {
 	private Long id;
 	
 	@NotBlank
-	@Size(max = 60)
-	private String descricao;
-	private String codigoBarras;
-	private Double preco;
-	@Column(name = "quantidade_estoque")
-	private Double qtdEstoque;
+	private String nome;
+	private String cpfCnpj;
+	private String rg;
+	@Enumerated(EnumType.STRING)
+	private TipoCliente tipoCliente;
 	@NotBlank
 	private LocalDateTime dataCadastro;
-
+	
 }

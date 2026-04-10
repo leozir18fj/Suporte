@@ -1,14 +1,10 @@
 package br.com.ionxp.suporte.domain.model;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.ManyToOne;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,21 +13,19 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Produto {
+public class Endereco {
 	
 	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@NotBlank
-	@Size(max = 60)
-	private String descricao;
-	private String codigoBarras;
-	private Double preco;
-	@Column(name = "quantidade_estoque")
-	private Double qtdEstoque;
-	@NotBlank
-	private LocalDateTime dataCadastro;
-
+	private String rua;
+	private String cep;
+	private String numero;
+	private String complemento;
+	private String bairro;
+	private String municipio;
+	private String estado;
+	@ManyToOne
+	private Cliente cliente;
 }
