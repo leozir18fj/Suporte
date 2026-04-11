@@ -28,7 +28,9 @@ public class Cliente {
 	@NotBlank
 	private String nome;
 	private String cpfCnpj;
-	private String rg;
+	private String ieRg;
+	private String email;
+	private String celular;
 	@Enumerated(EnumType.STRING)
 	private TipoCliente tipoCliente;
 	@NotBlank
