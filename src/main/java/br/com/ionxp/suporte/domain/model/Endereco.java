@@ -1,5 +1,7 @@
 package br.com.ionxp.suporte.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,5 +29,6 @@ public class Endereco {
 	private String municipio;
 	private String estado;
 	@ManyToOne
+	@JsonBackReference
 	private Cliente cliente;
 }
