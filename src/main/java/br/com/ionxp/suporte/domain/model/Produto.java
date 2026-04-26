@@ -31,7 +31,6 @@ public class Produto {
 	private Double preco;
 	@Column(name = "quantidade_estoque")
 	private Double qtdEstoque;
-	@NotBlank
 	private LocalDateTime dataCadastro;
 
 }

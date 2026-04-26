@@ -32,6 +32,7 @@ public class Cliente {
 	
 	@NotBlank
 	private String nome;
+	
 	private String cpfCnpj;
 	private String ieRg;
 	private String email;
@@ -46,6 +47,10 @@ public class Cliente {
 	public void adicionarEndereco(Endereco endereco) {
 	    endereco.setCliente(this);
 	    this.enderecos.add(endereco);
+	}
+	
+	public String getTipoClienteDescricao() {
+	    return tipoCliente != null ? tipoCliente.getDescricao() : null;
 	}
 	
 }
