@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.ionxp.suporte.domain.exception.NegocioException;
 import br.com.ionxp.suporte.domain.model.Cliente;
 import br.com.ionxp.suporte.domain.model.Endereco;
 import br.com.ionxp.suporte.domain.repository.ClienteRepository;
@@ -19,7 +20,15 @@ public class CadastroClienteService {
 	private ClienteRepository clienteRepository;
 
 	@Transactional
-	public Cliente adicionar(Cliente cliente) {
+	public Cliente adicionar(Cliente cliente) throws NegocioException {
+		if (cliente.getId() != null) {
+			throw new NegocioException("Cliente não deve possuir ID");
+		}
+		boolean cpfCnpjEmUso = clienteRepository.findByCpfCnpj(cliente.getCpfCnpj())
+				.filter(c -> !c.equals(cliente)).isPresent();
+		if (cpfCnpjEmUso) {
+			throw new NegocioException("CPF/ CNPJ já cadastrado no sistema");
+		}
 		cliente.setDataCadastro(LocalDateTime.now());
 		if (cliente.getEnderecos() != null) {
 
