@@ -42,5 +42,21 @@ public class CadastroClienteService {
 		}
 		return clienteRepository.save(cliente);
 	}
+	
+	public Cliente atualizar(Cliente cliente) {
+		if (cliente.getEnderecos() != null) {
+
+			List<Endereco> lista = new ArrayList<>(cliente.getEnderecos());
+			cliente.setEnderecos(new ArrayList<>());
+
+			lista.forEach(cliente::adicionarEndereco);
+		}
+		Cliente clienteExistente = clienteRepository.findById(cliente.getId())
+			    .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+			cliente.setDataCadastro(clienteExistente.getDataCadastro());
+
+		return clienteRepository.save(cliente);
+	}
 
 }

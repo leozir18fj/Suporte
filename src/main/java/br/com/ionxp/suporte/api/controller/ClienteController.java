@@ -55,7 +55,7 @@ public class ClienteController {
 			return ResponseEntity.notFound().build();
 		}
 		cliente.setId(id);
-		Cliente clienteAtualizado = cadastroClienteService.adicionar(cliente);
+		Cliente clienteAtualizado = cadastroClienteService.atualizar(cliente);
 		return ResponseEntity.ok(clienteAtualizado);
 	}
 
