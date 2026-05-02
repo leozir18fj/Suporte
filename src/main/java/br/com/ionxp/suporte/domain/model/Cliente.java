@@ -36,16 +36,16 @@ public class Cliente {
 	
 	@NotBlank
 	private String nome;
-	
 	private String cpfCnpj;
 	private String ieRg;
 	private String email;
 	private String celular;
+	@NotNull(groups = ValidationGroups.ClienteId.class)
 	@Enumerated(EnumType.STRING)
 	private TipoCliente tipoCliente;
 	@JsonProperty(access = Access.READ_ONLY)
 	private LocalDateTime dataCadastro;
-	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	private List<Endereco> enderecos;
 	

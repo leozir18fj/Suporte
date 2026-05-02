@@ -1,0 +1,35 @@
+package br.com.ionxp.suporte.api.exceptionhandler;
+
+import java.net.URI;
+
+import org.jspecify.annotations.Nullable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import br.com.ionxp.suporte.domain.exception.NegocioException;
+
+@RestControllerAdvice
+public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
+	
+	@ExceptionHandler(NegocioException.class)
+	public ResponseEntity<String> capturar(NegocioException e) {
+		return ResponseEntity.badRequest().body(e.getMessage());
+	}
+
+	@Override
+	protected @Nullable ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+		// TODO Auto-generated method stub
+		ProblemDetail problemDetail = ProblemDetail.forStatus(status);
+		problemDetail.setTitle("Um ou mais campos estão inválidos");
+		problemDetail.setType(URI.create(PAGE_NOT_FOUND_LOG_CATEGORY));
+		return super.handleExceptionInternal(ex, problemDetail, headers, status, request);
+	}
+}

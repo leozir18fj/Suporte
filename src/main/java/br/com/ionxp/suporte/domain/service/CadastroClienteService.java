@@ -24,9 +24,7 @@ public class CadastroClienteService {
 		if (cliente.getId() != null) {
 			throw new NegocioException("Cliente não deve possuir ID");
 		}
-		boolean cpfCnpjEmUso = clienteRepository.findByCpfCnpj(cliente.getCpfCnpj())
-				.filter(c -> !c.equals(cliente)).isPresent();
-		if (cpfCnpjEmUso) {
+		if (verificaCpfCnpjEmUso(cliente)) {
 			throw new NegocioException("CPF/ CNPJ já cadastrado no sistema");
 		}
 		cliente.setDataCadastro(LocalDateTime.now());
@@ -36,27 +34,44 @@ public class CadastroClienteService {
 			cliente.setEnderecos(new ArrayList<>());
 
 			lista.forEach(cliente::adicionarEndereco);
-			//for (Endereco e : lista) {
-		    //cliente.adicionarEndereco(e);
-			//}
+			// for (Endereco e : lista) {
+			// cliente.adicionarEndereco(e);
+			// }
 		}
 		return clienteRepository.save(cliente);
 	}
-	
-	public Cliente atualizar(Cliente cliente) {
+
+	@Transactional
+	public Cliente atualizar(Cliente cliente) throws NegocioException {
+		if (verificaCpfCnpjEmUso(cliente)) {
+			throw new NegocioException("CPF/ CNPJ já cadastrado no sistema");
+		}
+
+		Cliente clienteExistente = clienteRepository.findById(cliente.getId())
+				.orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+		clienteExistente.setNome(cliente.getNome());
+		clienteExistente.setIeRg(cliente.getIeRg());
+		clienteExistente.setEmail(cliente.getEmail());
+		clienteExistente.setCelular(cliente.getCelular());
+		clienteExistente.setTipoCliente(cliente.getTipoCliente());
+		clienteExistente.setDataCadastro(clienteExistente.getDataCadastro());
+
+		// limpa endereços antigos
+		clienteExistente.getEnderecos().clear();
+		//adiciona os novos corretamente
 		if (cliente.getEnderecos() != null) {
 
-			List<Endereco> lista = new ArrayList<>(cliente.getEnderecos());
-			cliente.setEnderecos(new ArrayList<>());
-
-			lista.forEach(cliente::adicionarEndereco);
+			for (Endereco e : cliente.getEnderecos()) {
+				clienteExistente.adicionarEndereco(e);
+			}
 		}
-		Cliente clienteExistente = clienteRepository.findById(cliente.getId())
-			    .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-			cliente.setDataCadastro(clienteExistente.getDataCadastro());
+		return clienteRepository.save(clienteExistente);
+	}
 
-		return clienteRepository.save(cliente);
+	private boolean verificaCpfCnpjEmUso(Cliente cliente) {
+		return clienteRepository.findByCpfCnpj(cliente.getCpfCnpj()).filter(c -> !c.equals(cliente)).isPresent();
 	}
 
 }
