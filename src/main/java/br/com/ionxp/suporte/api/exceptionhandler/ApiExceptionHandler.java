@@ -1,12 +1,16 @@
 package br.com.ionxp.suporte.api.exceptionhandler;
 
 import java.net.URI;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.jspecify.annotations.Nullable;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -30,6 +34,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		ProblemDetail problemDetail = ProblemDetail.forStatus(status);
 		problemDetail.setTitle("Um ou mais campos estão inválidos");
 		problemDetail.setType(URI.create(PAGE_NOT_FOUND_LOG_CATEGORY));
+		Map<String, String> fields = ex.getBindingResult().getAllErrors().stream()
+		 .collect(Collectors.toMap(objectError -> ((FieldError) objectError).getField(),
+                 DefaultMessageSourceResolvable::getDefaultMessage));
+		problemDetail.setProperty("fields", fields);
 		return super.handleExceptionInternal(ex, problemDetail, headers, status, request);
 	}
 }
