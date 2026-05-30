@@ -5,7 +5,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.jspecify.annotations.Nullable;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
@@ -18,9 +19,13 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import br.com.ionxp.suporte.domain.exception.NegocioException;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 @RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
+	
+	private final MessageSource messageSource;
 	
 	@ExceptionHandler(NegocioException.class)
 	public ResponseEntity<String> capturar(NegocioException e) {
@@ -36,7 +41,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		problemDetail.setType(URI.create(PAGE_NOT_FOUND_LOG_CATEGORY));
 		Map<String, String> fields = ex.getBindingResult().getAllErrors().stream()
 		 .collect(Collectors.toMap(objectError -> ((FieldError) objectError).getField(),
-                 DefaultMessageSourceResolvable::getDefaultMessage));
+                 objectError -> messageSource.getMessage(objectError, LocaleContextHolder.getLocale())));
 		problemDetail.setProperty("fields", fields);
 		return super.handleExceptionInternal(ex, problemDetail, headers, status, request);
 	}
