@@ -1,6 +1,6 @@
 package br.com.ionxp.suporte.domain.service;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class CadastroClienteService {
 		if (verificaCpfCnpjEmUso(cliente)) {
 			throw new NegocioException("CPF/ CNPJ já cadastrado no sistema");
 		}
-		cliente.setDataCadastro(LocalDateTime.now());
+		cliente.setDataCadastro(OffsetDateTime.now());
 		if (cliente.getEnderecos() != null) {
 
 			List<Endereco> lista = new ArrayList<>(cliente.getEnderecos());

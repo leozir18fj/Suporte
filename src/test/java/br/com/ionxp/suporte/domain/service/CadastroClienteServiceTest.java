@@ -11,7 +11,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -233,9 +233,9 @@ class CadastroClienteServiceTest {
             when(clienteRepository.save(any(Cliente.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-            LocalDateTime antes = LocalDateTime.now().minusSeconds(1);
+            OffsetDateTime antes = OffsetDateTime.now().minusSeconds(1);
             Cliente salvo = cadastroClienteService.adicionar(clientePJ);
-            LocalDateTime depois = LocalDateTime.now().plusSeconds(1);
+            OffsetDateTime depois = OffsetDateTime.now().plusSeconds(1);
 
             // A data de cadastro deve estar entre o momento antes e depois do save
             assertNotNull(salvo.getDataCadastro());
@@ -256,7 +256,7 @@ class CadastroClienteServiceTest {
             clienteExistente.setId(1L);
             clienteExistente.setNome("Nome Antigo");
             clienteExistente.setCpfCnpj("18820709000109");
-            clienteExistente.setDataCadastro(LocalDateTime.now().minusDays(10));
+            clienteExistente.setDataCadastro(OffsetDateTime.now().minusDays(10));
             clienteExistente.setEnderecos(new ArrayList<>());
 
             // Cliente com dados novos para atualizar
@@ -283,7 +283,7 @@ class CadastroClienteServiceTest {
         @Test
         @DisplayName("Deve preservar data de cadastro ao atualizar")
         void devePreservarDataDeCadastroAoAtualizar() throws NegocioException {
-            LocalDateTime dataOriginal = LocalDateTime.of(2024, 1, 15, 10, 0);
+            OffsetDateTime dataOriginal = OffsetDateTime.of(2024, 1, 15, 10, 0, 0, 0, null);
 
             Cliente clienteExistente = new Cliente();
             clienteExistente.setId(1L);
@@ -347,7 +347,7 @@ class CadastroClienteServiceTest {
             Cliente clienteExistente = new Cliente();
             clienteExistente.setId(1L);
             clienteExistente.setCpfCnpj("18820709000109");
-            clienteExistente.setDataCadastro(LocalDateTime.now());
+            clienteExistente.setDataCadastro(OffsetDateTime.now());
             clienteExistente.setEnderecos(new ArrayList<>());
 
             clientePJ.setId(1L);

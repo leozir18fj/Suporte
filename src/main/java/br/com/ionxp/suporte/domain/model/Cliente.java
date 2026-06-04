@@ -1,6 +1,6 @@
 package br.com.ionxp.suporte.domain.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -44,7 +44,7 @@ public class Cliente {
 	@Enumerated(EnumType.STRING)
 	private TipoCliente tipoCliente;
 	@JsonProperty(access = Access.READ_ONLY)
-	private LocalDateTime dataCadastro;
+	private OffsetDateTime dataCadastro;
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	private List<Endereco> enderecos;
