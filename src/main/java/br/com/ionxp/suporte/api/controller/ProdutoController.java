@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.ionxp.suporte.api.assembler.ProdutoAssembler;
+import br.com.ionxp.suporte.api.model.ProdutoModel;
 import br.com.ionxp.suporte.domain.exception.NegocioException;
 import br.com.ionxp.suporte.domain.model.Produto;
 import br.com.ionxp.suporte.domain.repository.ProdutoRepository;
@@ -28,16 +30,19 @@ public class ProdutoController {
 	
 	private final ProdutoRepository produtoRepository;
 	private final CadastroProdutoService cadastroProdutoService;
+	private final ProdutoAssembler produtoAssembler;
 	
 	@GetMapping
-	public List<Produto> listar(){
+	public List<ProdutoModel> listar(){
 		
-		return produtoRepository.findAll();
+		return produtoAssembler.toCollectionModel(produtoRepository.findAll());
 				
 	}
 	@GetMapping("/{id}")
-	public ResponseEntity<Produto> buscar(@PathVariable Long id) {
-		return produtoRepository.findById(id).map(ResponseEntity::ok)
+	public ResponseEntity<ProdutoModel> buscar(@PathVariable Long id) {
+		return produtoRepository.findById(id)
+				.map(produtoAssembler::toModel)
+				.map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
 		
 //		if (optional.isPresent()) {

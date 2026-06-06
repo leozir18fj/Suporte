@@ -1,6 +1,6 @@
 package br.com.ionxp.suporte.domain.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,6 +31,6 @@ public class Produto {
 	private Double preco;
 	@Column(name = "quantidade_estoque")
 	private Double qtdEstoque;
-	private LocalDateTime dataCadastro;
+	private OffsetDateTime dataCadastro;
 
 }

@@ -1,5 +1,7 @@
 package br.com.ionxp.suporte.domain.service;
 
+import java.time.OffsetDateTime;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,7 @@ public class CadastroProdutoService {
 		if (codigoBarrasEmUso) {
 			throw new NegocioException("Código de barras já utilizado em outro produto");
 		}
+		produto.setDataCadastro(OffsetDateTime.now());
 		return produtoRepository.save(produto);
 	}
 	
